@@ -1,0 +1,15 @@
+/* printableStyles.css */
+@media print {
+  /* Define print-specific styles here */
+  /* For example, hide unnecessary elements and style the printable content */
+
+  .printable-content {
+    visibility: visible;
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Add print-specific styles for the printable content here */
+  }
+}

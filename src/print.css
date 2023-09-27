@@ -1,0 +1,31 @@
+/* Set styles specifically for printing */
+@media print {
+  /* Reduce font sizes to fit content within the printable area */
+  body {
+    font-size: 10px;
+  }
+
+  /* Adjust margins and paddings to make content fit within the page */
+  .printable-content {
+    padding: 20px; /* Adjust as needed to create space between the content and the page edges */
+    margin: 0 auto; /* Center the content horizontally on the page */
+    max-width: 100%; /* Ensure the content doesn't exceed the printable area */
+  }
+
+  /* Set the paper size and orientation for printing */
+  @page {
+    size: A4 landscape; /* You can also try 'letter landscape' or other sizes */
+    margin: 0;
+  }
+
+  /* Ensure images fit within the page */
+  .printable-content img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Add page breaks between your different sections */
+  .page-break {
+    page-break-after: always;
+  }
+}
