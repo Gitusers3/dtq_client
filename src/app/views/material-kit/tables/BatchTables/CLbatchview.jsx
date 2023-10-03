@@ -49,7 +49,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function Batchview({ batch }) {
+function Batchview({ batch, SetBatchChange }) {
   console.log(batch);
   const [open, setOpen] = React.useState(false);
   const [initialBatch, setInitialBatch] = useState(batch);
@@ -86,6 +86,7 @@ function Batchview({ batch }) {
     });
   }, []);
   console.log(selectedtechie);
+  console.log(initialBatch);
   useEffect(() => {
     async function fetchdata() {
       const token = await localStorage.getItem('accessToken');
@@ -129,15 +130,13 @@ function Batchview({ batch }) {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleSave = () => {
-    url.put('batch/update');
-    setOpen(false);
-  };
+
   console.log(batch?.timings);
 
   const [selectedDays, setSelectedDays] = useState('');
   const [selectedFromTime, setSelectedFromTime] = useState('');
   const [selectedToTime, setSelectedToTime] = useState('');
+  const [times, setTimes] = useState(false);
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   const initialRow = {
@@ -155,7 +154,7 @@ function Batchview({ batch }) {
   });
 
   const handleChangeofDays = (index, field, value) => {
-    // console.log(value);
+    console.log(value);
     const updatedTimings = formData.timings.map((row, i) => {
       if (i === index) {
         if (field == 'from_time') {
@@ -199,6 +198,44 @@ function Batchview({ batch }) {
       ...formData,
       timings: [...formData.timings, { ...initialRow, id: formData.timings.length + 1 }]
     });
+  };
+  const handleTimes = () => {
+    setTimes((prev) => !prev);
+  };
+
+  const handleSave = async () => {
+    const updatedTimings = { ...formData };
+    // Check if timings have been modified
+    const timingsModified = updatedTimings.timings.some(
+      (row, index) =>
+        row.day !== initialRow.day ||
+        row.from_time !== initialRow.from_time ||
+        row.to_time !== initialRow.to_time
+    );
+
+    // If timings have not been modified, set timings to the initial timings
+    if (!timingsModified) {
+      updatedTimings.timings = [initialRow];
+    }
+    const updatedBatch = {
+      ...initialBatch,
+      timings: [...updatedTimings.timings],
+      tech_id: selectedtechie,
+      class_id: selectedClass
+    };
+    console.log(updatedBatch);
+    url
+      .put(`batch/update/${batch._id}`, updatedBatch)
+      .then((res) => {
+        if (res.status == 200) {
+          SetBatchChange((prev) => !prev);
+          console.log(res.data);
+        }
+      })
+      .catch((err) => {
+        alert(err);
+      });
+    await setOpen(false);
   };
   return (
     <div>
@@ -273,7 +310,7 @@ function Batchview({ batch }) {
                   columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                   key={row.id} // Added key to avoid React warnings
                 >
-                  <Grid item xs={4}>
+                  <Grid item xs={times === false ? 4 : 3}>
                     <FormControl fullWidth sx={{ mt: 1 }}>
                       <InputLabel id="demo-simple-select-label">Choose Day</InputLabel>
                       <Select
@@ -293,7 +330,7 @@ function Batchview({ batch }) {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={times === false ? 4 : 3}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer
                         components={[
@@ -303,15 +340,37 @@ function Batchview({ batch }) {
                           'StaticTimePicker'
                         ]}
                       >
-                        <MobileTimePicker
-                          name="from_time"
-                          value={row.from_time}
-                          onChange={(newValue) => handleChangeofDays(index, 'from_time', newValue)}
-                        />
+                        {times === false ? (
+                          <TextField
+                            id="standard-basic"
+                            value={row.from_time}
+                            variant="outlined"
+                            name="from_time"
+                            onClick={handleTimes}
+                            fullWidth
+                          />
+                        ) : (
+                          <MobileTimePicker
+                            name="from_time"
+                            value={row.from_time}
+                            onChange={(newValue) =>
+                              handleChangeofDays(index, 'from_time', newValue)
+                            }
+                          />
+                        )}
                       </DemoContainer>
                     </LocalizationProvider>
                   </Grid>
-                  <Grid item xs={4}>
+                  {times === true ? (
+                    <Grid item xs={2} sx={{ justifyContent: 'center', display: 'flex' }}>
+                      <button onClick={handleTimes} className="btn btn-danger mt-3 p-1">
+                        Return
+                      </button>
+                    </Grid>
+                  ) : (
+                    ''
+                  )}
+                  <Grid item xs={times === false ? 4 : 3}>
                     <div className="d-flex">
                       <div className="w-100">
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -323,13 +382,24 @@ function Batchview({ batch }) {
                               'StaticTimePicker'
                             ]}
                           >
-                            <MobileTimePicker
-                              name="to_time"
-                              value={row.to_time}
-                              onChange={(newValue) =>
-                                handleChangeofDays(index, 'to_time', newValue)
-                              }
-                            />
+                            {times === false ? (
+                              <TextField
+                                id="standard-basic"
+                                value={row.to_time}
+                                variant="outlined"
+                                name="to_time"
+                                onClick={handleTimes}
+                                fullWidth
+                              />
+                            ) : (
+                              <MobileTimePicker
+                                name="to_time"
+                                value={row.to_time}
+                                onChange={(newValue) =>
+                                  handleChangeofDays(index, 'to_time', newValue)
+                                }
+                              />
+                            )}
                           </DemoContainer>
                         </LocalizationProvider>
                       </div>
