@@ -90,54 +90,69 @@ export default function CogSimpleTable() {
             <TableCell align="center">Techie</TableCell>
           </TableRow>
         </TableHead>
-
         <TableBody>
           {daysInWeek.map((day) => (
             <TableRow key={day}>
               <TableCell align="left">{day}</TableCell>
               <TableCell align="left">
-                {timetableByDay[day]?.map((item, index) => (
-                  <p key={index}>
-                    {item?.timings
-                      .filter((t) => t.day === day)
-                      .map((t) => {
-                        // Split the time into hours and minutes
-                        const [hours, minutes] = t.from_time.split(':');
-                        const fromTime = `${hours}:${minutes}`;
+                {timetableByDay[day]?.length > 0 ? (
+                  timetableByDay[day]?.map((item, index) => (
+                    <p key={index}>
+                      {item?.timings
+                        .filter((t) => t.day === day)
+                        .map((t) => {
+                          // Split the time into hours and minutes
+                          const [hours, minutes] = t.from_time.split(':');
+                          const fromTime = `${hours}:${minutes}`;
 
-                        // Split the time into hours and minutes
-                        const [toHours, toMinutes] = t.to_time.split(':');
-                        const toTime = `${toHours}:${toMinutes}`;
+                          // Split the time into hours and minutes
+                          const [toHours, toMinutes] = t.to_time.split(':');
+                          const toTime = `${toHours}:${toMinutes}`;
 
-                        return `${fromTime} - ${toTime}`;
-                      })
-                      .join(', ')}
-                  </p>
-                ))}
+                          return `${fromTime} - ${toTime}`;
+                        })
+                        .join(', ')}
+                    </p>
+                  ))
+                ) : (
+                  <p>No batches</p> // Display this message if no batches for the day
+                )}
               </TableCell>
               <TableCell align="left">
-                {timetableByDay[day]?.map((item, index) => (
-                  <p key={index}>
-                    {item?.d_id?.d_name == 'Cognitive Solution' ? (
-                      <>CS</>
-                    ) : item?.d_id?.d_name == 'CodeLab Systems' ? (
-                      <>CL</>
-                    ) : (
-                      ''
-                    )}{' '}
-                    - {item.b_name}
-                  </p>
-                ))}
+                {timetableByDay[day]?.length > 0 ? (
+                  timetableByDay[day]?.map((item, index) => (
+                    <p key={index}>
+                      {item?.d_id?.d_name == 'Cognitive Solution' ? (
+                        <>CS</>
+                      ) : item?.d_id?.d_name == 'CodeLab Systems' ? (
+                        <>CL</>
+                      ) : (
+                        ''
+                      )}{' '}
+                      - {item.b_name}
+                    </p>
+                  ))
+                ) : (
+                  <p>No batches</p> // Display this message if no batches for the day
+                )}
               </TableCell>
               <TableCell align="center">
-                {timetableByDay[day]?.map((item, index) => (
-                  <p key={index}>{item?.class_id?.cls_name}</p>
-                ))}
+                {timetableByDay[day]?.length > 0 ? (
+                  timetableByDay[day]?.map((item, index) => (
+                    <p key={index}>{item?.class_id?.cls_name}</p>
+                  ))
+                ) : (
+                  <p>No batches</p> // Display this message if no batches for the day
+                )}
               </TableCell>
               <TableCell align="center">
-                {timetableByDay[day]?.map((item, index) => (
-                  <p key={index}>{item?.tech_id.map((tech) => tech?.staff_name).join(', ')}</p>
-                ))}
+                {timetableByDay[day]?.length > 0 ? (
+                  timetableByDay[day]?.map((item, index) => (
+                    <p key={index}>{item?.tech_id.map((tech) => tech?.staff_name).join(', ')}</p>
+                  ))
+                ) : (
+                  <p>No batches</p> // Display this message if no batches for the day
+                )}
               </TableCell>
             </TableRow>
           ))}

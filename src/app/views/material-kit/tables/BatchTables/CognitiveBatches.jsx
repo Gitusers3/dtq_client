@@ -34,6 +34,7 @@ const StyledTable = styled(Table)(({ theme }) => ({
 const SimpleTable = (propid) => {
   console.log(propid.propid);
   const [batch, SetBatch] = useState();
+  const [batchChange, SetBatchChange] = useState(false);
   useEffect(() => {
     url
       .get('batch/view')
@@ -45,7 +46,7 @@ const SimpleTable = (propid) => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [batchChange]);
   console.log(batch);
   const DeleteBatch = (id) => {
     const swalWithBootstrapButtons = Swal.mixin({
@@ -124,7 +125,7 @@ const SimpleTable = (propid) => {
                         </IconButton>
                       </Link>
 
-                      <CLbatchview batch={item} />
+                      <CLbatchview SetBatchChange={SetBatchChange} batch={item} />
                       <Tooltip arrow title="Delete Batch">
                         <IconButton>
                           <Icon onClick={() => DeleteBatch(item._id)} color="error">

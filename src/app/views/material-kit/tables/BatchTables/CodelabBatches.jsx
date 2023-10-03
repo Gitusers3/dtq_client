@@ -33,6 +33,8 @@ const StyledTable = styled(Table)(({ theme }) => ({
 export default function CodelabBatches(propid) {
   console.log(propid.propid);
   const [batch, SetBatch] = useState();
+  const [batchChange, SetBatchChange] = useState(false);
+
   useEffect(() => {
     url
       .get('batch/view')
@@ -44,7 +46,7 @@ export default function CodelabBatches(propid) {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [batchChange]);
   console.log(batch);
   const DeleteBatch = (id) => {
     const swalWithBootstrapButtons = Swal.mixin({
@@ -123,7 +125,7 @@ export default function CodelabBatches(propid) {
                             </IconButton>
                           </Tooltip>
                         </Link>
-                        <CLbatchview batch={item} />
+                        <CLbatchview SetBatchChange={SetBatchChange} batch={item} />
                         <Tooltip arrow title="Delete Batch">
                           <IconButton>
                             <Icon onClick={() => DeleteBatch(item._id)} color="error">
