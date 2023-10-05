@@ -102,29 +102,46 @@ export default function CogSimpleTable() {
                         .filter((t) => t.day === day)
                         .map((t) => {
                           // Split the time into hours and minutes
-                          const [hours, minutes] = t.from_time.split(':');
-                          const fromTime = `${hours}:${minutes}`;
-
-                          // Split the time into hours and minutes
+                          const [fromHours, fromMinutes] = t.from_time.split(':');
+                          let fromTime = parseInt(fromHours);
                           const [toHours, toMinutes] = t.to_time.split(':');
-                          const toTime = `${toHours}:${toMinutes}`;
+                          let toTime = parseInt(toHours);
 
-                          return `${fromTime} - ${toTime}`;
+                          // Determine AM or PM
+                          const fromAmpm = fromTime >= 12 ? 'PM' : 'AM';
+                          const toAmpm = toTime >= 12 ? 'PM' : 'AM';
+
+                          // Convert to 12-hour format
+                          if (fromTime > 12) {
+                            fromTime -= 12;
+                          }
+
+                          if (toTime > 12) {
+                            toTime -= 12;
+                          }
+
+                          fromTime = fromTime.toString().padStart(2, '0');
+                          toTime = toTime.toString().padStart(2, '0');
+
+                          const fromTimeFormatted = `${fromTime}:${fromMinutes} ${fromAmpm}`;
+                          const toTimeFormatted = `${toTime}:${toMinutes} ${toAmpm}`;
+
+                          return `${fromTimeFormatted} - ${toTimeFormatted}`;
                         })
                         .join(', ')}
                     </p>
                   ))
                 ) : (
-                  <p>No batches</p> // Display this message if no batches for the day
+                  <p>-</p> // Display this message if no batches for the day
                 )}
               </TableCell>
               <TableCell align="left">
                 {timetableByDay[day]?.length > 0 ? (
                   timetableByDay[day]?.map((item, index) => (
                     <p key={index}>
-                      {item?.d_id?.d_name == 'Cognitive Solution' ? (
+                      {item?.d_id?.d_name === 'Cognitive Solution' ? (
                         <>CS</>
-                      ) : item?.d_id?.d_name == 'CodeLab Systems' ? (
+                      ) : item?.d_id?.d_name === 'CodeLab Systems' ? (
                         <>CL</>
                       ) : (
                         ''
@@ -133,7 +150,7 @@ export default function CogSimpleTable() {
                     </p>
                   ))
                 ) : (
-                  <p>No batches</p> // Display this message if no batches for the day
+                  <p>-</p> // Display this message if no batches for the day
                 )}
               </TableCell>
               <TableCell align="center">
@@ -142,7 +159,7 @@ export default function CogSimpleTable() {
                     <p key={index}>{item?.class_id?.cls_name}</p>
                   ))
                 ) : (
-                  <p>No batches</p> // Display this message if no batches for the day
+                  <p>-</p> // Display this message if no batches for the day
                 )}
               </TableCell>
               <TableCell align="center">
@@ -151,7 +168,7 @@ export default function CogSimpleTable() {
                     <p key={index}>{item?.tech_id.map((tech) => tech?.staff_name).join(', ')}</p>
                   ))
                 ) : (
-                  <p>No batches</p> // Display this message if no batches for the day
+                  <p>-</p> // Display this message if no batches for the day
                 )}
               </TableCell>
             </TableRow>

@@ -164,7 +164,9 @@ const Staffform = () => {
     // alert(selectedDivision);
   }, [selectedTechie]);
 
-  const filteredTechie = techie?.filter((t) => t.designation === 'Software Developer');
+  const filteredTechie = techie?.filter(
+    (t) => t.designation === 'Software Developer' && t.status == 'active'
+  );
   const [selectedDays, setSelectedDays] = useState('');
   const [selectedFromTime, setSelectedFromTime] = useState('');
   const [selectedToTime, setSelectedToTime] = useState('');
@@ -276,7 +278,8 @@ const Staffform = () => {
       .post('http://localhost:4000/api/batch/insert', finalBatch)
       .then((res) => {
         console.log(res.data);
-        handleSnackClick();
+        // handleSnackClick();
+        setSnackOpen(true);
         nav('/batches');
       })
       .catch((err) => {
