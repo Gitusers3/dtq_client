@@ -129,6 +129,7 @@ const Staffform = () => {
     }
     setStaff({
       ...staff,
+      status: 'active',
       [event.target.name]: event.target.value
     });
   };
@@ -308,7 +309,7 @@ const Staffform = () => {
                 onChange={handleChange}
               >
                 <MenuItem value="Full Time">Full Time</MenuItem>
-                <MenuItem value="Full Time">Part Time</MenuItem>
+                <MenuItem value="Part Time">Part Time</MenuItem>
               </Select>
             </FormControl>
             <FormControl fullWidth>
@@ -322,7 +323,7 @@ const Staffform = () => {
                 onChange={handleChange}
               >
                 <MenuItem value="Permanent">Permanent</MenuItem>
-                <MenuItem value="Temporry">Temporary</MenuItem>
+                <MenuItem value="Temporary">Temporary</MenuItem>
               </Select>
             </FormControl>
             <FormControl fullWidth sx={{ mt: 2 }}>

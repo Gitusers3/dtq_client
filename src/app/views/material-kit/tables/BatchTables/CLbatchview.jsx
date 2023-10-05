@@ -94,7 +94,7 @@ function Batchview({ batch, SetBatchChange }) {
         .get('staff/view', { headers: { authToken: token } })
         .then((res) => {
           const staff = res.data.filter((item) => {
-            return item.designation === 'Software Developer';
+            return item.designation == 'Software Developer' && item.status == 'active';
           });
           setStaff(staff);
         })
